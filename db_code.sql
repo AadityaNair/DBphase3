@@ -1,150 +1,144 @@
-CREATE DATABASE db;
-USE db;
+DROP DATABASE IF EXISTS `db`;
 
-CREATE TABLE Medicine
+CREATE DATABASE `db`;
+USE `db`;
+
+CREATE TABLE `Supplier`
 (
-    ID varchar(255) NOT NULL,
-    Supplier varchar(255) NOT NULL,
-    Name, char(255) NOT NULL,
-    Cost, int(10) NOT NULL,
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `name` varchar(255) NOT NULL,
+    `phone` int(11) NOT NULL,
+    `address` varchar(255) NOT NULL,
+
+    PRIMARY KEY (`id`),
+    UNIQUE (`name`, `phone`),
+    UNIQUE (`name`, `address`),
+    UNIQUE (`name`, `phone`, `address`)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Medicine`
+(
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `supplier` mediumint(8) unsigned NOT NULL,
+    `name` varchar(255) NOT NULL,
+    `cost` int(10) unsigned NOT NULL,
+
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`supplier`) REFERENCES `Supplier` (`id`),
+    UNIQUE (`name`, `supplier`, `cost`),
+    UNIQUE (`name`),
+    CHECK (`cost` >= 0)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Inventory`
+(
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `medicine_id` mediumint(8) unsigned NOT NULL,
+    `quantity_left` int(10) unsigned NOT NULL,
+
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`medicine_id`) REFERENCES Medicine (`id`),
+    UNIQUE (`medicine_id`, `quantity_left`),
+    CHECK (`quantity_left` >= 0)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Patient`
+(
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `name` varchar(255) NOT NULL,
+    `phone` int(11) unsigned,
+    `address` varchar(255),
+
+    PRIMARY KEY (`id`),
+    UNIQUE (`name`, `phone`, `address`),
+    CHECK (`phone` > 0)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Patient_Contact`
+(
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `name` varchar(255) NOT NULL,
+    `phone` int(11) unsigned NOT NULL,
+    `patient_id` mediumint(8) unsigned NOT NULL,
+    `address` varchar(255) NOT NULL,
+
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`patient_id`) REFERENCES `Patient` (`id`),
+    UNIQUE (`name`, `phone`, `address` , `patient_id`),
+    CHECK (`phone` > 0)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Employee`
+(
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `name` varchar(255) NOT NULL,
+    `salary` mediumint(8) NOT NULL,
+
+    PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Sales`
+(
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `cost` int(11) unsigned NOT NULL,
+    `employee_id` mediumint(8) unsigned NOT NULL,
+
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
+    CHECK (`cost` >= 0)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Medicine_Sold`
+(
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
+    `quantity` int(10) unsigned NOT NULL,
+    `medicine_id` mediumint(8) unsigned NOT NULL,
+    `sale_id` mediumint(8) unsigned NOT NULL,
+
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
+    FOREIGN KEY (`sale_id`) REFERENCES `Sales` (`id`),
+    UNIQUE (`sale_id`, `medicine_id`),
+    UNIQUE (`medicine_id`, `quantity`),
+    UNIQUE (`sale_id`, `medicine_id`, `quantity`),
+    CHECK (`quantity` >= 0)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Employee_Dependent`
+(
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `name` varchar(255) NOT NULL,
+    `relation` varchar(255) NOT NULL,
+    `employee_id` mediumint(8) unsigned NOT NULL,
     
-    PRIMARY KEY (ID),
-    FOREIGN KEY (Supplier) REFERNECES Supplier (ID),
-    UNIQUE (Name, Supplier, Cost)
-);
-
-CREATE TABLE Inventory
-(
-    ID, NOT NULL,
-    Name, NOT NULL,
-    Quantity_Left, int(10), NOT NULL,
-
-    PRIMARY KEY (ID),
-    FOREIGN KEY (Name) REFERNECES Medicine (Name),
-    UNIQUE (Name, Quantity_Left)
-);
-
-CREATE TABLE Patient
-(
-    ID varchar(255) NOT NULL,
-    Name char(255) NOT NULL,
-    Phone int(11),
-    Address varchar(500),
-
-    PRIMARY KEY (ID),
-    UNIQUE (Name, Phone, Address)
-);
-
-CREATE TABLE Patient_Contact
-(
-    ID varchar(255) NOT NULL,
-    Name char(255) NOT NULL,
-    Phone int(11) NOT NULL,
-    Patient_ID varchar(255) NOT NULL,
-
-    PRIMARY KEY (ID)
-    FOREIGN KEY (Patient_ID) REFERNECES Patient (ID)
-
-);
-
-CREATE TABLE Supplier
-(
-    ID varchar(255) NOT NULL,
-    Name char(255) NOT NULL,
-    Phone int(11) NOT NULL,
-    Address varchar(500) NOT NULL,
-
-    PRIMARY KEY (ID),
-    UNIQUE (Name, Phone),
-    UNIQUE (Name, Address),
-    UNIQUE (Name, Phone, Address)
-);
-
-CREATE TABLE Sales
-(
-    ID varchar(255) NOT NULL,
-    Cost int(11) NOT NULL,
-    Employee_ID varchar(255),
-
-    PRIMARY KEY (ID),
-    FOREIGN KEY (Employee_ID) REFERNECES Employee(ID)
-);
-
-CREATE TABLE Medicine_Sold
-(
-    Quantity int(10) NOT NULL,
-    Medicine_ID varchar(255) NOT NULL,
-    Sale_ID varchar(255) NOT NULL,
-
-    FOREIGN KEY (Medicine_ID) REFERNECES Medicine (ID),
-    FOREIGN KEY (Sale_ID) REFERNECES Sales (ID),
-    UNIQUE (Sale_ID, Medicine_ID),
-    UNIQUE (Medicine_ID, Quantity),
-    UNIQUE (Sale_ID, Medicine_ID, Sale_ID)
-);
-
-CREATE TABLE Employee
-(
-    ID varchar(255) NOT NULL,
-    Name char(255) NOT NULL,
-    Salary int(8) NOT NULL,
-
-    PRIMARY KEY (ID),
-);
-
-CREATE TABLE Employee_Dependent
-(
-    ID varchar(255) NOT NULL,
-    Name char(255) NOT NULL,
-    Relation char(255) NOT NULL,
-    Employee_ID varchar(255), NOT NULL,
-    
-    PRIMARY KEY (ID),
-    FOREIGN KEY (Employee_ID) REFERNECES Employee (ID),
-    UNIQUE (Name, Relation, Employee_ID)
-);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
+    UNIQUE (`name`, `relation`, `employee_id`)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
