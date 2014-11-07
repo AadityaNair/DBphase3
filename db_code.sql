@@ -142,3 +142,81 @@ CREATE TABLE `Employee_Dependent`
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
+
+CREATE TABLE `Pharmacist`
+(
+    `employee_id` mediumint(8) unsigned NOT NULL,
+    `designation` char(255) NOT NULL,
+    `department` cahr(255) NOT NULL,
+    
+    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
+    UNIQUE (`employee_id`, `department`),
+    UNIQUE (`employee_id`, `designation`),
+    UNIQUE (`employee_id`, `designation`, `department`)
+);
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Doctor`
+(
+    `employee_id` mediumint(8) unsigned NOT NULL,
+    `designation` char(255) NOT NULL,
+    `department` cahr(255) NOT NULL,
+    
+    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
+    UNIQUE (`employee_id`, `department`),
+    UNIQUE (`employee_id`, `designation`),
+    UNIQUE (`employee_id`, `designation`, `department`)
+);
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Sedative`
+(
+    `medicine_id` mediumint(8) NOT NULL,
+    `type` char(255) NOT NULL,
+
+    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
+    UNIQUE (`medicine_id`, `type`)
+);
+ENGINE = InnpDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Ayurvedic`
+(
+    `medicine_id` mediumint(8) NOT NULL,
+    `type` char(255) NOT NULL,
+
+    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
+    UNIQUE (`medicine_id`, `type`)
+);
+ENGINE = InnpDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Homeopathic`
+(
+    `medicine_id` mediumint(8) NOT NULL,
+    `type` char(255) NOT NULL,
+
+    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
+    UNIQUE (`medicine_id`, `type`)
+);
+ENGINE = InnpDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Miscellaneous`
+(
+    `medicine_id` mediumint(8) NOT NULL,
+    `type` char(255) NOT NULL,
+
+    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
+    UNIQUE (`medicine_id`, `type`)
+);
+ENGINE = InnpDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
