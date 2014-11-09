@@ -1,14 +1,10 @@
 <?php
 require 'debug.php';
 require 'config.php';
-//@Nair : Meant to be inserted as require in the top of everyfile except index.
 $conn = new mysqli ($db_hostname , $db_username , $db_password , $db_databasename);
 session_start();
 if (!isset($_SESSION['user'])) {
-	$host = $_SERVER['HTTP_HOST'];
-	$uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-	$extra = '';
-	header("Location: http://$host$uri/$extra");
+	$_SESSION['user'] = "foobar";
 }
 if (!isset($_SESSION['admin'])) {
 	$query = $conn->prepare("SELECT `id` FROM `Admins` WHERE `user_id` = (SELECT `id` FROM `Users` WHERE `user_id` = ? LIMIT 1)");

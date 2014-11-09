@@ -1,7 +1,7 @@
 <?php
 require 'init.php';
 //@Nair : Basically Contains all ajax requests
-$returnText = "";
+$returnText = array();
 
 if (isset($_POST['key'])) {
 	// do Something
