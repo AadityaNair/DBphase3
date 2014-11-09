@@ -43,7 +43,7 @@ CREATE TABLE `Inventory`
     `quantity_left` int(10) unsigned NOT NULL,
 
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`medicine_id`) REFERENCES Medicine (`id`),
+    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
     UNIQUE (`medicine_id`, `quantity_left`),
     CHECK (`quantity_left` >= 0)
 )
@@ -145,78 +145,90 @@ AUTO_INCREMENT = 1;
 
 CREATE TABLE `Pharmacist`
 (
+	`id` mediumint(8) unsigned NOT NULL,
     `employee_id` mediumint(8) unsigned NOT NULL,
-    `designation` char(255) NOT NULL,
-    `department` cahr(255) NOT NULL,
+    `designation` varchar(255) NOT NULL,
+    `department` varchar(255) NOT NULL,
     
+	PRIMARY KEY (`id`),
     FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
     UNIQUE (`employee_id`, `department`),
     UNIQUE (`employee_id`, `designation`),
     UNIQUE (`employee_id`, `designation`, `department`)
-);
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
 CREATE TABLE `Doctor`
 (
+	`id` mediumint(8) unsigned NOT NULL,
     `employee_id` mediumint(8) unsigned NOT NULL,
-    `designation` char(255) NOT NULL,
-    `department` cahr(255) NOT NULL,
+    `designation` varchar(255) NOT NULL,
+    `department` varchar(255) NOT NULL,
     
+	PRIMARY KEY (`id`),
     FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
     UNIQUE (`employee_id`, `department`),
     UNIQUE (`employee_id`, `designation`),
     UNIQUE (`employee_id`, `designation`, `department`)
-);
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
 CREATE TABLE `Sedative`
 (
-    `medicine_id` mediumint(8) NOT NULL,
-    `type` char(255) NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL,
+    `medicine_id` mediumint(8) unsigned NOT NULL,
+    `type` varchar(255) NOT NULL,
 
+	PRIMARY KEY (`id`),
     FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
     UNIQUE (`medicine_id`, `type`)
-);
-ENGINE = InnpDB
+)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
 CREATE TABLE `Ayurvedic`
 (
-    `medicine_id` mediumint(8) NOT NULL,
-    `type` char(255) NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL,
+    `medicine_id` mediumint(8) unsigned NOT NULL,
+    `type` varchar(255) NOT NULL,
 
+	PRIMARY KEY (`id`),
     FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
     UNIQUE (`medicine_id`, `type`)
-);
-ENGINE = InnpDB
+)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
 CREATE TABLE `Homeopathic`
 (
-    `medicine_id` mediumint(8) NOT NULL,
-    `type` char(255) NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL,
+    `medicine_id` mediumint(8) unsigned NOT NULL,
+    `type` varchar(255) NOT NULL,
 
+	PRIMARY KEY (`id`),
     FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
     UNIQUE (`medicine_id`, `type`)
-);
-ENGINE = InnpDB
+)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
 CREATE TABLE `Miscellaneous`
 (
-    `medicine_id` mediumint(8) NOT NULL,
-    `type` char(255) NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL,
+    `medicine_id` mediumint(8) unsigned NOT NULL,
+    `type` varchar(255) NOT NULL,
 
+	PRIMARY KEY (`id`),
     FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
     UNIQUE (`medicine_id`, `type`)
-);
-ENGINE = InnpDB
+)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
