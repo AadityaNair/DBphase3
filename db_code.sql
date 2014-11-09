@@ -145,7 +145,7 @@ AUTO_INCREMENT = 1;
 
 CREATE TABLE `Pharmacist`
 (
-	`id` mediumint(8) unsigned NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
     `employee_id` mediumint(8) unsigned NOT NULL,
     `designation` varchar(255) NOT NULL,
     `department` varchar(255) NOT NULL,
@@ -162,7 +162,7 @@ AUTO_INCREMENT = 1;
 
 CREATE TABLE `Doctor`
 (
-	`id` mediumint(8) unsigned NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
     `employee_id` mediumint(8) unsigned NOT NULL,
     `designation` varchar(255) NOT NULL,
     `department` varchar(255) NOT NULL,
@@ -179,7 +179,7 @@ AUTO_INCREMENT = 1;
 
 CREATE TABLE `Sedative`
 (
-	`id` mediumint(8) unsigned NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
     `medicine_id` mediumint(8) unsigned NOT NULL,
     `type` varchar(255) NOT NULL,
 
@@ -193,7 +193,7 @@ AUTO_INCREMENT = 1;
 
 CREATE TABLE `Ayurvedic`
 (
-	`id` mediumint(8) unsigned NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
     `medicine_id` mediumint(8) unsigned NOT NULL,
     `type` varchar(255) NOT NULL,
 
@@ -207,7 +207,7 @@ AUTO_INCREMENT = 1;
 
 CREATE TABLE `Homeopathic`
 (
-	`id` mediumint(8) unsigned NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
     `medicine_id` mediumint(8) unsigned NOT NULL,
     `type` varchar(255) NOT NULL,
 
@@ -221,13 +221,40 @@ AUTO_INCREMENT = 1;
 
 CREATE TABLE `Miscellaneous`
 (
-	`id` mediumint(8) unsigned NOT NULL,
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
     `medicine_id` mediumint(8) unsigned NOT NULL,
     `type` varchar(255) NOT NULL,
 
 	PRIMARY KEY (`id`),
     FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
     UNIQUE (`medicine_id`, `type`)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Users`
+(
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
+	`user_id` varchar(255) NOT NULL,
+	`password_hash` varchar(255) NOT NULL,
+	`password_salt` varchar(255) NOT NULL,
+	`name` varchar(255) NOT NULL,
+	
+	PRIMARY KEY (`id`),
+	UNIQUE (`user_id`)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+CREATE TABLE `Admins`
+(
+	`id` mediumint(8) unsigned NOT NULL auto_increment,
+	`user_id` mediumint(8) unsigned NOT NULL,
+
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
