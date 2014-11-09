@@ -58,6 +58,5 @@ function slow_equals($a, $b)
 	}
 	return $diff === 0; 
 }
-
 ?>
 

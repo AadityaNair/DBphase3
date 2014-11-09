@@ -3,9 +3,6 @@ require 'debug.php';
 require 'config.php';
 $conn = new mysqli ($db_hostname , $db_username , $db_password , $db_databasename);
 session_start();
-if (!isset($_SESSION['user'])) {
-	$_SESSION['user'] = "foobar";
-}
 if (!isset($_SESSION['admin'])) {
 	$query = $conn->prepare("SELECT `id` FROM `Admins` WHERE `user_id` = (SELECT `id` FROM `Users` WHERE `user_id` = ? LIMIT 1)");
 	$query->bind_param("s" , $_SESSION['user']);
@@ -24,3 +21,30 @@ if (isset($_REQUEST['logout'])) {
 }
 
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Doctors</title>
+	<link rel="stylesheet" type="text/css" href="./main.css">
+</head>
+<body>
+	<div id="wrapper">
+		<div id="header-wrapper">
+<?php
+	include 'navbar.php';
+?>
+		</div>
+		<div id="content-wrapper">
+			
+		</div>
+		<div id="footer-wrapper">
+<?php 
+	include 'footer.php';
+?>
+		</div>
+	</div>
+	<script type="text/javascript" src="./main.js"></script>
+</body>
+</html>
