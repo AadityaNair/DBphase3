@@ -40,6 +40,26 @@ var main  = function (event) {
 		window.location.href = "./admin.php";
 	};
 
+	
+
+	var xmlhttp = new XMLHttpRequest();
+	var postData = function (data) {
+		xmlhttp.open("POST" , "./model.php" , true);
+		xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+		var stringToSend = "";
+		for (var key in data) {
+			stringToSend += key + "=" + data[key] + "&";
+		}
+		stringToSend = stringToSend.slice(0 , -1);
+		console.log(stringToSend);
+		xmlhttp.send(stringToSend);
+		xmlhttp.onreadystatechange = function () {
+			if (xmlhttp.status == 200 && xmlhttp.readyState == 4) {
+				window.location.href = "./";
+			}
+		};
+	};
+
 	init();
 }
 

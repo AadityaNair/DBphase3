@@ -33,11 +33,19 @@ if (isset($_REQUEST['logout'])) {
 	<div id="wrapper">
 		<div id="header-wrapper">
 <?php
-	include 'navbar.php';
+	if (isset($_SESSION['user'])) {
+		include 'navbar.php';
+	}
 ?>
 		</div>
 		<div id="content-wrapper">
-			
+<?php
+	if (!isset($_SESSION['user'])) {
+		include 'login.php';
+	} else {
+		include 'profile.php';
+	}
+?>			
 		</div>
 		<div id="footer-wrapper">
 <?php 
@@ -46,5 +54,12 @@ if (isset($_REQUEST['logout'])) {
 		</div>
 	</div>
 	<script type="text/javascript" src="./main.js"></script>
+<?php 
+	if (!isset($_SESSION['user'])) {
+?>
+	<script type="text/javascript" src="./login.js"></script>
+<?php
+	}
+?>
 </body>
 </html>
