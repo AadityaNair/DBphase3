@@ -39,7 +39,7 @@ var login = function (event) {
 		var stringToSend = "";
 		for (var key in data) {
 			stringToSend += key + "=" + data[key] + "&";
-		}
+		};
 		stringToSend = stringToSend.slice(0 , -1);
 		xmlhttp.send(stringToSend);
 		xmlhttp.onreadystatechange = function () {
@@ -51,6 +51,21 @@ var login = function (event) {
 					} , 1000);
 				}
 			}
+		};
+	};
+
+	var createNode = function (type , id , classList , innerText , parentNode , onclickHandler , attributes) {
+		var node = document.createElement(type);
+		node.id = id;
+		for (var i = classList.length - 1; i >= 0; i--) {
+			node.classList.add(classList[i]);
+		};	
+		node.appendChild( document.createTextNode (innerText) );
+		node.addEventListener('click' , onclickHandler , true);
+		parentNode.appendChild(node);
+		return node;
+		for (var key in attributes) {
+			node.setAttribute(key , attributes[key]);
 		};
 	};
 

@@ -2,7 +2,8 @@ var main  = function (event) {
 	var home_button,
 		logout_button,
 		report_button,
-		admin_button;
+		admin_button,
+		tables;
 
 	var init = function () {
 		home_button = document.getElementById('button-home');
@@ -22,7 +23,21 @@ var main  = function (event) {
 		if (admin_button) {
 			admin_button.addEventListener('click' , handleAdminButtonClick , true);
 		}
+
+		tables = document.getElementsByClassName('table-list child');
+		for (var i = tables.length - 1; i >= 0; i--) {
+			tables[i].addEventListener('click' , handleTableButtonClick , true);
+		};
 	};
+
+	var handleTableButtonClick = function (event) {
+		if (event.target.id) {
+			var table_name = event.target.id;
+		} else {
+			var table_name = "";
+		}
+		window.location.href = "./table_display.php?table=" + table_name;
+	}
 
 	var handleHomeButtonClick = function (event) {
 		window.location.href = "./";
@@ -40,7 +55,7 @@ var main  = function (event) {
 		window.location.href = "./admin.php";
 	};
 
-	
+
 
 	var xmlhttp = new XMLHttpRequest();
 	var postData = function (data) {

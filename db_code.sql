@@ -83,13 +83,32 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
+CREATE TABLE `Users`
+(
+    `id` mediumint(8) unsigned NOT NULL auto_increment,
+    `user_id` varchar(255) NOT NULL,
+    `password_hash` varchar(255) NOT NULL,
+    `password_salt` varchar(255) NOT NULL,
+    `name` varchar(255) NOT NULL,
+    
+    PRIMARY KEY (`id`),
+    UNIQUE (`user_id`)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+AUTO_INCREMENT = 1;
+
+INSERT INTO `Users` ( `user_id` , `password_hash` , `password_salt` , `name` ) VALUES ( "admin_user" , "cW6loT9bBdRF+JxboyTVuonhokDxJGcC" , "WcxbQOOOoKTX+yl6IqDuRNlv2Wr8DPPE" , "Admin");
+
 CREATE TABLE `Employee`
 (
     `id` mediumint(8) unsigned NOT NULL auto_increment,
     `name` varchar(255) NOT NULL,
     `salary` mediumint(8) NOT NULL,
+	`user_id` mediumint(8) unsigned NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+	FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -233,21 +252,6 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
-CREATE TABLE `Users`
-(
-	`id` mediumint(8) unsigned NOT NULL auto_increment,
-	`user_id` varchar(255) NOT NULL,
-	`password_hash` varchar(255) NOT NULL,
-	`password_salt` varchar(255) NOT NULL,
-	`name` varchar(255) NOT NULL,
-	
-	PRIMARY KEY (`id`),
-	UNIQUE (`user_id`)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-AUTO_INCREMENT = 1;
-
 CREATE TABLE `Admins`
 (
 	`id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -259,3 +263,5 @@ CREATE TABLE `Admins`
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
+
+INSERT INTO `Admins` ( `user_id` ) VALUES ( 1 );

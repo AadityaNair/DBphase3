@@ -1,7 +1,7 @@
 <?php
-require 'debug.php';
-require 'config.php';
-require 'pbkdf2.php';
+require_once 'debug.php';
+require_once 'config.php';
+require_once 'pbkdf2.php';
 
 $conn = new mysqli ($db_hostname , $db_username , $db_password , $db_databasename);
 session_start();

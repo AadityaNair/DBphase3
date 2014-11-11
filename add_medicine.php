@@ -1,7 +1,5 @@
 <?php
-    require 'debug.php '
-    require 'config.php'
-    $conn= new mysqli ($db_hostname, $db_username, $db_password, $db_databasename)
+    require_once 'init.php';
 
     // Get all data via POST
     $medicine_name=$_POST['name'];

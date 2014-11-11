@@ -1,6 +1,6 @@
 <?php
-require 'debug.php';
-require 'config.php';
+require_once 'debug.php';
+require_once 'config.php';
 //@Nair : Meant to be inserted as require in the top of everyfile except index.
 $conn = new mysqli ($db_hostname , $db_username , $db_password , $db_databasename);
 session_start();
