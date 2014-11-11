@@ -3,11 +3,15 @@
 // Temporary
 
 <?php
+require 'init.php'; // workarround for db connenctions.
 
+if (isset($_POST['show_medicine_expanded'])) {  // show Medicines to DatabASe
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
 
-if (isset($_POST['show_medicine_expanded'])) {  // show Medicines to Database
-	$offset = (int) $_POST['offset'] or 0;
-	$query=$conn->prepare("SELECT M.id AS id , M.name AS name , M.cost AS cost , S.name AS supplier_name , S.phone AS supplier_phone , S.address AS supplier_address FROM `Medicine` AS M , `Supplier` AS S WHERE S.id = M.supplier LIMIT 100 OFFSET ?");
+	$query=$conn->prepare("SELECT M.id AS id , M.name AS name , M.cost AS cost , S.name AS supplier_name , S.phone AS supplier_phone , S.address AS supplier_address FROM Medicine AS M , Supplier AS S WHERE S.id = M.supplier LIMIT 100 OFFSET ?");
 	if (!$query){
 		echo "Failed";
 	}
@@ -22,7 +26,7 @@ if (isset($_POST['show_medicine_expanded'])) {  // show Medicines to Database
 				'name' => $name,
 				'cost' => $cost
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -31,8 +35,12 @@ if (isset($_POST['show_medicine_expanded'])) {  // show Medicines to Database
 	exit;
 }
 
-if (isset($_POST['show_supplier_expanded'])) {  // Register a new supplier in database
-	$offset = (int) $_POST['offset'] or 0;
+if (isset($_POST['show_supplier_expanded'])) {  // Register a new supplier in databASe
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("SELECT `id` , `name` , `phone` , `address` FROM `Supplier` LIMIT 100 OFFSET ?");
 	if (!$query){
 		echo "Failed";
@@ -49,7 +57,7 @@ if (isset($_POST['show_supplier_expanded'])) {  // Register a new supplier in da
 				'phone' => $phone,
 				'address' => $address
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -59,7 +67,11 @@ if (isset($_POST['show_supplier_expanded'])) {  // Register a new supplier in da
 }
 
 if (isset($_POST['show_inventory_expanded'])) {  // show medicines to inventory.
-	$offset = (int) $_POST['offset'] or 0;
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("SELECT I.id AS id , MS.medicine_name AS medicine_name , MS.medicine_cost AS medicine_cost , MS.supplier_name AS supplier_name , MS.supplier_phone AS supplier_phone , MS.supplier_address AS supplier_address FROM `Inventory` AS I , (SELECT M.id AS medicine_id , M.name AS medicine_name , M.cost AS medicine_cost , S.name AS supplier_name , S.phone AS supplier_phone , S.address AS supplier_address FROM `Medicine` AS M , `Supplier` AS S WHERE S.id = M.supplier) AS MS WHERE MS.medicine_id = I.medicine_id LIMIT 100 OFFSET ?");
 	if (!$query){
 		echo "Failed";
@@ -78,7 +90,7 @@ if (isset($_POST['show_inventory_expanded'])) {  // show medicines to inventory.
 				'supplier_phone' => $supplier_phone,
 				'supplier_address' => $supplier_address
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -87,8 +99,12 @@ if (isset($_POST['show_inventory_expanded'])) {  // show medicines to inventory.
 	exit;
 }
 
-if (isset($_POST['show_patients'])) {  // Register Patients
-	$offset = (int) $_POST['offset'] or 0;
+if (isset($_POST['show_patients_expanded'])) {  // Register Patients
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("SELECT `id` , `name` , `phone` , `address` FROM `Patient` LIMIT 100 OFFSET ?");
 	if (!$query){
 		echo "Failed";
@@ -104,9 +120,9 @@ if (isset($_POST['show_patients'])) {  // Register Patients
 				'name' => $name,
 				'$phone' => $phone,
 				'$address' => $address
-				
+
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -115,8 +131,109 @@ if (isset($_POST['show_patients'])) {  // Register Patients
 	exit;
 }
 
-if (isset($_POST['show_contact'])) {  // Register Patients' Contact
-	$offset = (int) $_POST['offset'] or 0;
+if (isset($_POST['show_patient_contact_expanded'])) {  // Register Patients' Contact
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT PC.id AS id , PC.name AS name , PC.phone AS phone , P.name AS patient_name , P.phone AS patient_phone , P.address AS patient_address , PC.address AS address FROM `Patient_Contact` AS P , `Patient` AS P WHERE PC.patient_id = P.id LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$name,$phone,$patient_name,$patient_phone,$patient_address,$address);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'name' => $name,
+				'phone' => $phone,
+				'patient_name' => $patient_name,
+				'patient_phone' => $patient_phone,
+				'patient_address' => $patient_address,
+				'address' => $address				
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_employee_expanded'])) {  // Register Employee
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT `id` , `name` , `salary` , `user_id` FROM `Employee` LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$name,$salary,$user_id);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'name' => $name,
+				'salary' => $salary,
+				'user_id' =? $user_id
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_sale_expanded'])) {  // Register a Sale
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT S.id AS id , S.cost AS cost , E.name AS employee_name , E.user_id AS employee_user_id FROM `Sales` AS S , `Employee` AS E WHERE E.id = S.employee_id LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$cost,$employee_name,$employee_user_id);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'cost' => $cost,
+				'employee_name' => $employee_name,
+				'employee_user_id' => $employee_user_id
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['medicine_sold_expanded'])) {  // Store Medicines Sold 
+	//TODO : Fill
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("");
 	if (!$query){
 		echo "Failed";
@@ -129,9 +246,9 @@ if (isset($_POST['show_contact'])) {  // Register Patients' Contact
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-				
+
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -140,8 +257,12 @@ if (isset($_POST['show_contact'])) {  // Register Patients' Contact
 	exit;
 }
 
-if (isset($_POST['show_employee'])) {  // Register Employee
-	$offset = (int) $_POST['offset'] or 0;
+if (isset($_POST['show_employee_dependent_expanded'])) {  // show Employees' Contact
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("");
 	if (!$query){
 		echo "Failed";
@@ -154,84 +275,9 @@ if (isset($_POST['show_employee'])) {  // Register Employee
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-				
-			);
-			array_push(return_text, return_text_item);
-		}
-	}
-	$query->close();
-	$conn->close();
-	echo json_encode($return_text);
-	exit;
-}
 
-if (isset($_POST['show_sale'])) {  // Register a Sale
-	$offset = (int) $_POST['offset'] or 0;
-	$query=$conn->prepare("");
-	if (!$query){
-		echo "Failed";
-	}
-	else{
-		$query->bind_param("i", $offset);
-		$query->execute();
-		$query->bind_result();
-		$return_text = array();
-		while ($query->fetch()) {
-			$return_text_item = array(
-				'id' => $id,
-				
 			);
-			array_push(return_text, return_text_item);
-		}
-	}
-	$query->close();
-	$conn->close();
-	echo json_encode($return_text);
-	exit;
-}
-
-if (isset($_POST['medicine_sold'])) {  // Store Medicines Sold
-	$offset = (int) $_POST['offset'] or 0;
-	$query=$conn->prepare("");
-	if (!$query){
-		echo "Failed";
-	}
-	else{
-		$query->bind_param("i", $offset);
-		$query->execute();
-		$query->bind_result();
-		$return_text = array();
-		while ($query->fetch()) {
-			$return_text_item = array(
-				'id' => $id,
-				
-			);
-			array_push(return_text, return_text_item);
-		}
-	}
-	$query->close();
-	$conn->close();
-	echo json_encode($return_text);
-	exit;
-}
-
-if (isset($_POST['show_employee_dependent'])) {  // show Employees' Contact
-	$offset = (int) $_POST['offset'] or 0;
-	$query=$conn->prepare("");
-	if (!$query){
-		echo "Failed";
-	}
-	else{
-		$query->bind_param("i", $offset);
-		$query->execute();
-		$query->bind_result();
-		$return_text = array();
-		while ($query->fetch()) {
-			$return_text_item = array(
-				'id' => $id,
-				
-			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -241,7 +287,11 @@ if (isset($_POST['show_employee_dependent'])) {  // show Employees' Contact
 }
 
 if (isset($_POST['show_pharmacist'])) {  // Pharmacist Specialisation
-	$offset = (int) $_POST['offset'] or 0;
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("");
 	if (!$query){
 		echo "Failed";
@@ -254,9 +304,9 @@ if (isset($_POST['show_pharmacist'])) {  // Pharmacist Specialisation
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-				
+
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -266,7 +316,11 @@ if (isset($_POST['show_pharmacist'])) {  // Pharmacist Specialisation
 }
 
 if (isset($_POST['show_doctor'])) {  // Doctor Specialisation
-	$offset = (int) $_POST['offset'] or 0;
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("");
 	if (!$query){
 		echo "Failed";
@@ -279,9 +333,9 @@ if (isset($_POST['show_doctor'])) {  // Doctor Specialisation
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-				
+
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -291,7 +345,11 @@ if (isset($_POST['show_doctor'])) {  // Doctor Specialisation
 }
 
 if (isset($_POST['show_ayurvedic'])) {  // Ayurvedic
-	$offset = (int) $_POST['offset'] or 0;
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("");
 	if (!$query){
 		echo "Failed";
@@ -304,9 +362,9 @@ if (isset($_POST['show_ayurvedic'])) {  // Ayurvedic
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-				
+
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -316,7 +374,11 @@ if (isset($_POST['show_ayurvedic'])) {  // Ayurvedic
 }
 
 if (isset($_POST['show_sedative'])) {  // Sedative
-	$offset = (int) $_POST['offset'] or 0;
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("");
 	if (!$query){
 		echo "Failed";
@@ -329,9 +391,9 @@ if (isset($_POST['show_sedative'])) {  // Sedative
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-				
+
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -341,7 +403,11 @@ if (isset($_POST['show_sedative'])) {  // Sedative
 }
 
 if (isset($_POST['show_homeopathic'])) {  // Homeopathic
-	$offset = (int) $_POST['offset'] or 0;
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("");
 	if (!$query){
 		echo "Failed";
@@ -354,9 +420,9 @@ if (isset($_POST['show_homeopathic'])) {  // Homeopathic
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-				
+
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();
@@ -366,7 +432,11 @@ if (isset($_POST['show_homeopathic'])) {  // Homeopathic
 }
 
 if (isset($_POST['show_miscellaneous'])) {  // Miscellaneous
-	$offset = (int) $_POST['offset'] or 0;
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
 	$query=$conn->prepare("");
 	if (!$query){
 		echo "Failed";
@@ -379,9 +449,9 @@ if (isset($_POST['show_miscellaneous'])) {  // Miscellaneous
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-				
+
 			);
-			array_push(return_text, return_text_item);
+			array_push($return_text, $return_text_item);
 		}
 	}
 	$query->close();

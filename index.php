@@ -9,6 +9,7 @@ if (!isset($_SESSION['admin'])) {
 	$query->bind_param("s" , $_SESSION['user']);
 	$query->execute();
 	$query->bind_result($id);
+	$query->fetch();
 	if ($id) {
 		$_SESSION['admin'] = $_SESSION['user'];
 	}

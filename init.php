@@ -18,6 +18,7 @@ if (!isset($_SESSION['admin'])) {
 	if ($id) {
 		$_SESSION['admin'] = $_SESSION['user'];
 	}
+	$query->close();
 }
 if (isset($_REQUEST['logout'])) {
 	session_destroy();
