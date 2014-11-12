@@ -43,7 +43,8 @@
 	<script type="text/javascript" src="./main.js"></script>
 	<script type="text/javascript">
 		var t = Table({
-			"table" : <?php echo json_encode($table); ?>
+			"table" : <?php echo json_encode($table); ?>,
+			"container" : document.getElementById('content-wrapper')
 		});
 	</script>
 <?php 

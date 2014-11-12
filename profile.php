@@ -5,6 +5,9 @@ echo "Welcome " . $_SESSION['user'];
 </h1>
 
 <div class="table-list parent">
+<?php 
+	if (isset($_SESSION['admin'])) {
+?>
 	<div class="table-list child" id="Supplier">
 		Supplier 
 	</div>
@@ -32,46 +35,28 @@ echo "Welcome " . $_SESSION['user'];
 	<div class="table-list child" id="Employee_Dependent">
 		Employee Dependent 
 	</div>
-	<div class="table-list child" id="Pharmacist">
-		Pharmacist 
-	</div>
-	<div class="table-list child" id="Doctor">
-		Doctor 
-	</div>
-	<div class="table-list child" id="Sedative">
-		Sedative 
-	</div>
-	<div class="table-list child" id="Ayurvedic">
-		Ayurvedic 
-	</div>	
-	<div class="table-list child" id="Homeopathic">
-		Homeopathic 
-	</div>	
-	<div class="table-list child" id="Miscellaneous">
-		Miscellaneous 
-	</div>
 	<div class="table-list child" id="Users">
 		Users 
 	</div>
 	<div class="table-list child" id="Admins">
 		Admins 
 	</div>
+<?php 
+	} else {
+?>
+	<div class="table-list child" id="Supplier">
+		Supplier 
+	</div>
+	<div class="table-list child" id="Medicine">
+		Medicine 
+	</div>	
+	<div class="table-list child" id="Patient">
+		Patient 
+	</div>
+	<div class="table-list child" id="Patient_Contact">
+		Patient Contact 
+	</div>
+<?php
+	}
+?>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

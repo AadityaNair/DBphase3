@@ -19,6 +19,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
+INSERT INTO `Supplier` ( `name` , `phone` , `address` ) VALUES ( "Supplier 1" , "123456789" , "@ IIIT.AC.IN" );
+
 CREATE TABLE `Medicine`
 (
     `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -36,6 +38,9 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
+INSERT INTO `Medicine` ( `supplier` , `name` , `cost` ) VALUES ( 1 , "Medicine 1" , 22112 );
+INSERT INTO `Medicine` ( `supplier` , `name` , `cost` ) VALUES ( 1 , "Medicine 2" , 21321 );
+
 CREATE TABLE `Inventory`
 (
     `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -51,6 +56,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
+INSERT INTO `Inventory` ( `medicine_id` , `quantity_left` ) VALUES ( 1 , 13131 ); 
+
 CREATE TABLE `Patient`
 (
     `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -59,12 +66,14 @@ CREATE TABLE `Patient`
     `address` varchar(255),
 
     PRIMARY KEY (`id`),
-    UNIQUE (`name`, `phone`, `address`),
-    CHECK (`phone` > 0)
+    UNIQUE (`name`, `phone`, `address`)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
+
+INSERT INTO `Patient` ( `name` , `phone` , `address` ) VALUES ( "Patient 0" , 131313131 , "@ IIIT.AC.IN");
+INSERT INTO `Patient` ( `name` , `phone` , `address` ) VALUES ( "Patient 1" , 131314111 , "@ IIIT.AC.IN");
 
 CREATE TABLE `Patient_Contact`
 (
@@ -76,12 +85,13 @@ CREATE TABLE `Patient_Contact`
 
     PRIMARY KEY (`id`),
     FOREIGN KEY (`patient_id`) REFERENCES `Patient` (`id`),
-    UNIQUE (`name`, `phone`, `address` , `patient_id`),
-    CHECK (`phone` > 0)
+    UNIQUE (`name`, `phone`, `address` , `patient_id`)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
+
+INSERT INTO `Patient_Contact` ( `name` , `phone` , `patient_id` , `address` ) VALUES ( "Contact 1" , 131241311 , 1 , "@ IIIT.AC.IN");
 
 CREATE TABLE `Users`
 (
@@ -89,7 +99,6 @@ CREATE TABLE `Users`
     `user_id` varchar(255) NOT NULL,
     `password_hash` varchar(255) NOT NULL,
     `password_salt` varchar(255) NOT NULL,
-    `name` varchar(255) NOT NULL,
     
     PRIMARY KEY (`id`),
     UNIQUE (`user_id`)
@@ -98,7 +107,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
-INSERT INTO `Users` ( `user_id` , `password_hash` , `password_salt` , `name` ) VALUES ( "admin_user" , "cW6loT9bBdRF+JxboyTVuonhokDxJGcC" , "WcxbQOOOoKTX+yl6IqDuRNlv2Wr8DPPE" , "Admin");
+INSERT INTO `Users` ( `user_id` , `password_hash` , `password_salt` ) VALUES ( "admin_user" , "cW6loT9bBdRF+JxboyTVuonhokDxJGcC" , "WcxbQOOOoKTX+yl6IqDuRNlv2Wr8DPPE");
+INSERT INTO `Users` ( `user_id` , `password_hash` , `password_salt` ) VALUES ( "normal_user" , "cW6loT9bBdRF+JxboyTVuonhokDxJGcC" , "WcxbQOOOoKTX+yl6IqDuRNlv2Wr8DPPE");
 
 CREATE TABLE `Employee`
 (
@@ -114,6 +124,9 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
+INSERT INTO `Employee` ( `name` , `salary` , `user_id` ) VALUES ("Admin User" , 1000 , 1);
+INSERT INTO `Employee` ( `name` , `salary` , `user_id` ) VALUES ("Normal User" , 1000 , 2);
+
 CREATE TABLE `Sales`
 (
     `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -128,6 +141,9 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
+INSERT INTO `Sales` ( `cost` , `employee_id` ) VALUES ( 1000 , 2 );
+INSERT INTO `Sales` ( `cost` , `employee_id` ) VALUES ( 100 , 2 );
+
 CREATE TABLE `Medicine_Sold`
 (
 	`id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -139,13 +155,16 @@ CREATE TABLE `Medicine_Sold`
     FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
     FOREIGN KEY (`sale_id`) REFERENCES `Sales` (`id`),
     UNIQUE (`sale_id`, `medicine_id`),
-    UNIQUE (`medicine_id`, `quantity`),
-    UNIQUE (`sale_id`, `medicine_id`, `quantity`),
     CHECK (`quantity` >= 0)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
+
+INSERT INTO `Medicine_Sold` ( `quantity` , `medicine_id` , `sale_id` ) VALUES ( 100 , 1 , 1 );
+INSERT INTO `Medicine_Sold` ( `quantity` , `medicine_id` , `sale_id` ) VALUES ( 100 , 2 , 1 );
+INSERT INTO `Medicine_Sold` ( `quantity` , `medicine_id` , `sale_id` ) VALUES ( 100 , 1 , 2 );
+INSERT INTO `Medicine_Sold` ( `quantity` , `medicine_id` , `sale_id` ) VALUES ( 100 , 2 , 2 );
 
 CREATE TABLE `Employee_Dependent`
 (
@@ -162,97 +181,10 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
-CREATE TABLE `Pharmacist`
-(
-	`id` mediumint(8) unsigned NOT NULL auto_increment,
-    `employee_id` mediumint(8) unsigned NOT NULL,
-    `designation` varchar(255) NOT NULL,
-    `department` varchar(255) NOT NULL,
-    
-	PRIMARY KEY (`id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
-    UNIQUE (`employee_id`, `department`),
-    UNIQUE (`employee_id`, `designation`),
-    UNIQUE (`employee_id`, `designation`, `department`)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-AUTO_INCREMENT = 1;
+INSERT INTO `Employee_Dependent` ( `name` , `relation` , `employee_id` ) VALUES ( "Dependent 1" , "Relation" , 2);
+INSERT INTO `Employee_Dependent` ( `name` , `relation` , `employee_id` ) VALUES ( "Dependent 2" , "Relation" , 2);
 
-CREATE TABLE `Doctor`
-(
-	`id` mediumint(8) unsigned NOT NULL auto_increment,
-    `employee_id` mediumint(8) unsigned NOT NULL,
-    `designation` varchar(255) NOT NULL,
-    `department` varchar(255) NOT NULL,
-    
-	PRIMARY KEY (`id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
-    UNIQUE (`employee_id`, `department`),
-    UNIQUE (`employee_id`, `designation`),
-    UNIQUE (`employee_id`, `designation`, `department`)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-AUTO_INCREMENT = 1;
-
-CREATE TABLE `Sedative`
-(
-	`id` mediumint(8) unsigned NOT NULL auto_increment,
-    `medicine_id` mediumint(8) unsigned NOT NULL,
-    `type` varchar(255) NOT NULL,
-
-	PRIMARY KEY (`id`),
-    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
-    UNIQUE (`medicine_id`, `type`)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-AUTO_INCREMENT = 1;
-
-CREATE TABLE `Ayurvedic`
-(
-	`id` mediumint(8) unsigned NOT NULL auto_increment,
-    `medicine_id` mediumint(8) unsigned NOT NULL,
-    `type` varchar(255) NOT NULL,
-
-	PRIMARY KEY (`id`),
-    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
-    UNIQUE (`medicine_id`, `type`)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-AUTO_INCREMENT = 1;
-
-CREATE TABLE `Homeopathic`
-(
-	`id` mediumint(8) unsigned NOT NULL auto_increment,
-    `medicine_id` mediumint(8) unsigned NOT NULL,
-    `type` varchar(255) NOT NULL,
-
-	PRIMARY KEY (`id`),
-    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
-    UNIQUE (`medicine_id`, `type`)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-AUTO_INCREMENT = 1;
-
-CREATE TABLE `Miscellaneous`
-(
-	`id` mediumint(8) unsigned NOT NULL auto_increment,
-    `medicine_id` mediumint(8) unsigned NOT NULL,
-    `type` varchar(255) NOT NULL,
-
-	PRIMARY KEY (`id`),
-    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
-    UNIQUE (`medicine_id`, `type`)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-AUTO_INCREMENT = 1;
-
-CREATE TABLE `Admins`
+CREATE TABLE `Admins` 
 (
 	`id` mediumint(8) unsigned NOT NULL auto_increment,
 	`user_id` mediumint(8) unsigned NOT NULL,
