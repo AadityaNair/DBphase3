@@ -156,7 +156,7 @@ var Table = function (params) {
 			stringToSend += key + "=" + data[key] + "&";
 		}
 		stringToSend = stringToSend.slice(0 , -1);
-		console.log(stringToSend);
+		stringToSend.replace(" " , "+");
 		xmlhttpPost.send(stringToSend);
 		xmlhttpPost.onreadystatechange = function () {
 			if (xmlhttpPost.status == 200 && xmlhttpPost.readyState == 4) {
@@ -174,7 +174,7 @@ var Table = function (params) {
 			stringToSend += key + "=" + data[key] + "&";
 		}
 		stringToSend = stringToSend.slice(0 , -1);
-		console.log(stringToSend);
+		stringToSend.replace(" " , "+");
 		xmlhttpGet.send(stringToSend);
 		xmlhttpGet.onreadystatechange = function () {
 			if (xmlhttpGet.status == 200 && xmlhttpGet.readyState == 4) {

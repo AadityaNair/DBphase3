@@ -196,6 +196,22 @@ if (isset($_POST['add_employee_dependent'])) {
 	exit;
 }
 
+if (isset($_POST['add_admins'])) {  
+	$user_id=$_POST['user_id'];
+	
+	$query=$conn->prepare("INSERT INTO `Admins` (`user_id`) VALUES (?)");
+	if (!$query){
+		echo "Insert Unsuccessful.";
+	}
+	else{
+		$query->bind_param("i", $user_id);
+		$query->execute();
+	}
+	$query->close();
+	$conn->close();
+	exit;
+}
+
 if (isset($_POST['login_request'])) {
 	$user_id  = $_POST['user_id'];
 	$password = $_POST['password'];
@@ -509,19 +525,27 @@ if (isset($_POST['show_medicine_sold_expanded'])) {
 	else 
 		$offset = 0;
 
-	$query=$conn->prepare("");
+	$query=$conn->prepare("SELECT id , quantity , medicine_name , medicine_cost , supplier_name , supplier_phone , supplier_address , sales_cost , employee_name , employee_user_id from Medicine_Sold , (select M.id as medicine_id , M.name as medicine_name , M.cost as medicine_cost , S.name as supplier_name , S.phone as supplier_phone , S.address as supplier_address  from Medicine as M , Supplier as S where M.supplier_id = S.id) as MS , (select S.id as sales_id , S.cost as sales_cost , E.name as employee_name , E.user_id as employee_user_id from Sales as S , Employee as E) as SE where Medicine_Sold.medicine_id = MS.medicine_id and Medicine_Sold.sale_id = SE.sales_id LIMIT 100 OFFSET ?");
 	if (!$query){
 		echo "Failed";
 	}
 	else{
 		$query->bind_param("i", $offset);
 		$query->execute();
-		$query->bind_result();
+		$query->bind_result($id , $quantity , $medicine_name , $medicine_cost , $supplier_name , $supplier_phone , $supplier_address , $sales_cost , $employee_name , $employee_user_id);
 		$return_text = array();
 		while ($query->fetch()) {
 			$return_text_item = array(
 				'id' => $id,
-
+				'quantity' => $quantity, 
+				'medicine_name' => $medicine_name, 
+				'medicine_cost' => $medicine_cost, 
+				'supplier_name' => $supplier_name, 
+				'supplier_phone' => $supplier_phone, 
+				'supplier_address' => $supplier_address, 
+				'sales_cost' => $sales_cost, 
+				'employee_name' => $employee_name, 
+				'employee_user_id' => $employee_user_id
 			);
 			array_push($return_text, $return_text_item);
 		}
