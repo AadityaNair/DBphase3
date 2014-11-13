@@ -4,6 +4,7 @@
 }
 
 .index-list input {
+	text-transform: none;
 	height: 100%;
 	width: 100%;
 	margin: 0;
@@ -55,6 +56,18 @@
 .index-list.add-button:hover {
 	background-color: green;
 	color: whitesmoke;
+}
+
+.index-list.new_save-button {
+	color: whitesmoke;
+	background-color: lightyellow;
+	color: darkslategray;
+	cursor: pointer;
+}
+
+.index-list.new_save-button:hover {
+	background-color: yellow;
+	color: darkolivegreen;
 }
 
 .index-list.delete-button {

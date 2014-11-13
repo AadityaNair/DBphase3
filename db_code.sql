@@ -24,13 +24,13 @@ INSERT INTO `Supplier` ( `name` , `phone` , `address` ) VALUES ( "Supplier 1" , 
 CREATE TABLE `Medicine`
 (
     `id` mediumint(8) unsigned NOT NULL auto_increment,
-    `supplier` mediumint(8) unsigned NOT NULL,
+    `supplier_id` mediumint(8) unsigned NOT NULL,
     `name` varchar(255) NOT NULL,
     `cost` int(10) unsigned NOT NULL,
 
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`supplier`) REFERENCES `Supplier` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
-    UNIQUE (`name`, `supplier`, `cost`),
+    FOREIGN KEY (`supplier_id`) REFERENCES `Supplier` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
+    UNIQUE (`name`, `supplier_id`, `cost`),
     UNIQUE (`name`),
     CHECK (`cost` >= 0)
 )
@@ -38,8 +38,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 AUTO_INCREMENT = 1;
 
-INSERT INTO `Medicine` ( `supplier` , `name` , `cost` ) VALUES ( 1 , "Medicine 1" , 22112 );
-INSERT INTO `Medicine` ( `supplier` , `name` , `cost` ) VALUES ( 1 , "Medicine 2" , 21321 );
+INSERT INTO `Medicine` ( `supplier_id` , `name` , `cost` ) VALUES ( 1 , "Medicine 1" , 22112 );
+INSERT INTO `Medicine` ( `supplier_id` , `name` , `cost` ) VALUES ( 1 , "Medicine 2" , 21321 );
 
 CREATE TABLE `Inventory`
 (

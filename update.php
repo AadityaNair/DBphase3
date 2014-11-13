@@ -1,9 +1,5 @@
-// @Parth Contains all Update queries
-// Moved to a separate file to avoid clutter
-// Temporary
 
 <?php
-
 
 if (isset($_POST['update_medicine'])) {  // Update Medicines to Database
     $id=$_POST['id'];
