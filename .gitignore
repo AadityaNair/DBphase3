@@ -102,6 +102,10 @@ Session.vim
 .netrwhist
 *~
 
+# Latex
+*.log
+*.aux
+
 ### Project Specific ### 
 conf.php
 config.php
