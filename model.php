@@ -525,7 +525,7 @@ if (isset($_POST['show_medicine_sold_expanded'])) {
 	else 
 		$offset = 0;
 
-	$query=$conn->prepare("SELECT id , quantity , medicine_name , medicine_cost , supplier_name , supplier_phone , supplier_address , sales_cost , employee_name , employee_user_id from Medicine_Sold , (select M.id as medicine_id , M.name as medicine_name , M.cost as medicine_cost , S.name as supplier_name , S.phone as supplier_phone , S.address as supplier_address  from Medicine as M , Supplier as S where M.supplier_id = S.id) as MS , (select S.id as sales_id , S.cost as sales_cost , E.name as employee_name , E.user_id as employee_user_id from Sales as S , Employee as E) as SE where Medicine_Sold.medicine_id = MS.medicine_id and Medicine_Sold.sale_id = SE.sales_id LIMIT 100 OFFSET ?");
+	$query=$conn->prepare("SELECT id , quantity , medicine_name , medicine_cost , supplier_name , supplier_phone , supplier_address , sales_cost , employee_name , employee_user_id from Medicine_Sold , (select M.id as medicine_id , M.name as medicine_name , M.cost as medicine_cost , S.name as supplier_name , S.phone as supplier_phone , S.address as supplier_address  from Medicine as M , Supplier as S where M.supplier_id = S.id) as MS , (select S.id as sales_id , S.cost as sales_cost , E.name as employee_name , E.user_id as employee_user_id from Sales as S , Employee as E WHERE S.employee_id = E.id) as SE where Medicine_Sold.medicine_id = MS.medicine_id and Medicine_Sold.sale_id = SE.sales_id LIMIT 100 OFFSET ?");
 	if (!$query){
 		echo "Failed";
 	}
