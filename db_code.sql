@@ -29,7 +29,7 @@ CREATE TABLE `Medicine`
     `cost` int(10) unsigned NOT NULL,
 
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`supplier`) REFERENCES `Supplier` (`id`),
+    FOREIGN KEY (`supplier`) REFERENCES `Supplier` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
     UNIQUE (`name`, `supplier`, `cost`),
     UNIQUE (`name`),
     CHECK (`cost` >= 0)
@@ -48,7 +48,7 @@ CREATE TABLE `Inventory`
     `quantity_left` int(10) unsigned NOT NULL,
 
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
+    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
     UNIQUE (`medicine_id`, `quantity_left`),
     CHECK (`quantity_left` >= 0)
 )
@@ -84,7 +84,7 @@ CREATE TABLE `Patient_Contact`
     `address` varchar(255) NOT NULL,
 
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`patient_id`) REFERENCES `Patient` (`id`),
+    FOREIGN KEY (`patient_id`) REFERENCES `Patient` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
     UNIQUE (`name`, `phone`, `address` , `patient_id`)
 )
 ENGINE = InnoDB
@@ -118,7 +118,7 @@ CREATE TABLE `Employee`
 	`user_id` mediumint(8) unsigned NOT NULL,
 
     PRIMARY KEY (`id`),
-	FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
+	FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -134,7 +134,7 @@ CREATE TABLE `Sales`
     `employee_id` mediumint(8) unsigned NOT NULL,
 
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
+    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
     CHECK (`cost` >= 0)
 )
 ENGINE = InnoDB
@@ -152,8 +152,8 @@ CREATE TABLE `Medicine_Sold`
     `sale_id` mediumint(8) unsigned NOT NULL,
 
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`),
-    FOREIGN KEY (`sale_id`) REFERENCES `Sales` (`id`),
+    FOREIGN KEY (`medicine_id`) REFERENCES `Medicine` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (`sale_id`) REFERENCES `Sales` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
     UNIQUE (`sale_id`, `medicine_id`),
     CHECK (`quantity` >= 0)
 )
@@ -174,7 +174,7 @@ CREATE TABLE `Employee_Dependent`
     `employee_id` mediumint(8) unsigned NOT NULL,
     
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`),
+    FOREIGN KEY (`employee_id`) REFERENCES `Employee` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT,
     UNIQUE (`name`, `relation`, `employee_id`)
 )
 ENGINE = InnoDB
@@ -190,7 +190,7 @@ CREATE TABLE `Admins`
 	`user_id` mediumint(8) unsigned NOT NULL,
 
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
+	FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8

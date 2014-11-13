@@ -3,6 +3,13 @@
 	text-align: center;
 }
 
+.index-list input {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 .index-list.parent {
 	display: table;
 	min-width: 100%;
@@ -21,6 +28,12 @@
 .index-list.body.row-wrapper {
 	background-color: aliceblue;
 	color: rebeccapurple;
+	cursor: pointer;
+}
+
+.index-list.body.row-wrapper:hover {
+	background-color: rebeccapurple;
+	color: aliceblue;
 }
 
 .index-list.cell {
@@ -32,12 +45,26 @@
 	        user-select: none;
 }
 
-.index-list.body.cell:hover {
-	background-color: goldenrod;
+.index-list.add-button {
+	color: saddlebrown;
+	background-color: lightgreen;
+	color: lavenderblush;
 	cursor: pointer;
 }
 
-.index-list.body.cell:active {
-	position: relative;
-	top: 1px;
+.index-list.add-button:hover {
+	background-color: green;
+	color: whitesmoke;
+}
+
+.index-list.delete-button {
+	width: 20px;
+	background-color: lightgoldenrodyellow;
+	color: mediumvioletred;
+	cursor: pointer;
+}
+
+.index-list.delete-button:hover {
+	background-color: red;
+	color: whitesmoke;
 }
