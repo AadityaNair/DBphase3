@@ -1,0 +1,43 @@
+.index-list {
+	text-transform: capitalize;
+	text-align: center;
+}
+
+.index-list.parent {
+	display: table;
+	min-width: 100%;
+}
+
+.index-list.row-wrapper {
+	display: table-row;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.index-list.header.row-wrapper {
+	background-color: wheat;
+	color: cadetblue;
+}
+
+.index-list.body.row-wrapper {
+	background-color: aliceblue;
+	color: rebeccapurple;
+}
+
+.index-list.cell {
+	display: table-cell;
+	padding: 10px 20px;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+}
+
+.index-list.body.cell:hover {
+	background-color: goldenrod;
+	cursor: pointer;
+}
+
+.index-list.body.cell:active {
+	position: relative;
+	top: 1px;
+}

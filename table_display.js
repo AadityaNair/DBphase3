@@ -3,13 +3,14 @@ var Table = function (params) {
 	var data,
 		container,
 		theme,
-		interval;
+		interval,
+		offset;
 			
 	var init = function (params) {
 		var table = {};
-		var str_tmp = "show_" + params['table'].toLowerCase() + "_expanded";
+		var str_tmp = "show_" + params['table'].toLowerCase().replace(" " , "_") + "_expanded";
 		table[str_tmp] = true;
-		table['offset'] = 0;
+		table['offset'] = offset || 0;
 		fetchData(table);
 				
 		container = params['container'];
@@ -24,7 +25,18 @@ var Table = function (params) {
 
 	var init_extended = function (responseText) {
 		data = responseText;
-		console.log(data);
+		container.innerHTML = "";
+		var parent = createNode("div" , "" , [theme , "parent"] , "" , container , null , {});
+		var header = createNode("div" , "" , [theme , "row-wrapper" , "header"] , "" , parent , null , {});
+		for (var key in data[0]) {
+			createNode("div" , "" , [theme , "header" , "cell"] , key.replace(/_/g, " " ) , header , null , {});
+		}
+		for (var i = data.length - 1; i >= 0; i--) {
+			var row = createNode("div" , "" , [theme , "row-wrapper" , "body"] , "" , parent , null , {});
+			for (var key in data[i]) {
+				createNode("div" , "" , [theme , "body" , "cell"] , data[i][key] , row , null , {});		
+			}
+		};
 	}
 
 	var xmlhttpPost = new XMLHttpRequest();
@@ -47,7 +59,7 @@ var Table = function (params) {
 
 	var xmlhttpGet = new XMLHttpRequest();
 	var fetchData = function (data) {
-		xmlhttpGet.open("POST" , "./retrieve.php" , true);
+		xmlhttpGet.open("POST" , "./model.php" , true);
 		xmlhttpGet.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 		var stringToSend = "";
 		for (var key in data) {
@@ -74,10 +86,10 @@ var Table = function (params) {
 		node.appendChild( document.createTextNode (innerText) );
 		node.addEventListener('click' , onclickHandler , true);
 		parentNode.appendChild(node);
-		return node;
 		for (var key in attributes) {
 			node.setAttribute(key , attributes[key]);
 		};
+		return node;
 	};
 
 	var log = function () {

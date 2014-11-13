@@ -64,7 +64,7 @@ if (isset($_POST['add_supplier'])) {  // Register a new supplier in database
 	exit;
 }
 
-if (isset($_POST['add_to_inventory'])) {  // Add medicines to inventory.
+if (isset($_POST['add_inventory'])) {  // Add medicines to inventory.
 	$medicine_id=$_POST['med_id'];
 	$quantity_left=$_POST['quantity'];
 
@@ -82,7 +82,7 @@ if (isset($_POST['add_to_inventory'])) {  // Add medicines to inventory.
 	exit;
 }
 
-if (isset($_POST['add_patients'])) {  // Register Patients
+if (isset($_POST['add_patient'])) {  // Register Patients
 	$patient_name=$_POST['name'];
     $patient_phone=$_POST['phone'];
     $patient_address=$_POST['address'];
@@ -101,7 +101,7 @@ if (isset($_POST['add_patients'])) {  // Register Patients
 	exit;
 }
 
-if (isset($_POST['add_contact'])) {  // Register Patients' Contact
+if (isset($_POST['add_patient_contact'])) {  // Register Patients' Contact
 	$contact_name=$_POST['name'];
     $contact_phone=$_POST['phone'];
     $contact_address=$_POST['address'];
@@ -140,7 +140,7 @@ if (isset($_POST['add_employee'])) {  // Register Employee
     exit;
 }
 
-if (isset($_POST['add_sale'])) {  // Register a Sale
+if (isset($_POST['add_sales'])) {  // Register a Sale
 	$employee_id=$_POST['employee'];
 	$cost=$_POST['cost'];
 
@@ -158,7 +158,7 @@ if (isset($_POST['add_sale'])) {  // Register a Sale
 	exit;
 }
 
-if (isset($_POST['medicine_sold'])) {  // Store Medicines Sold
+if (isset($_POST['add_medicine_sold'])) {  // Store Medicines Sold
 	$sale_id=$_POST['sale_id'];
     $quantity=$_POST['quantity'];
     $medicine_id=$_POST['medicine_id'];
@@ -190,116 +190,6 @@ if (isset($_POST['add_employee_dependent'])) {  // Register Employees' Contact
 	}
 	else{
 		$query->bind_param("sdsd", $dependent_name, $dependent_phone, $dependent_address, $employee_id);
-		$query->execute();
-	}
-	$query->close();
-	$conn->close();
-	exit;
-}
-
-if (isset($_POST['add_pharmacist'])) {  // Pharmacist Specialisation
-	$employee_id=$_POST['employee_id'];
-    $designation=$_POST['designation'];
-    $department=$_POST['department'];
-
-	// Now the sql
-	$query=$conn->prepare("INSERT INTO `Pharmacist` (`department`, `designation`, `employee_id`) VALUES (?, ?, ?)");
-	if (!$query){
-		echo "Insert Unsuccessful.";
-	}
-	else{
-		$query->bind_param("ssd", $department, $designation, $employee_id);
-		$query->execute();
-	}
-	$query->close();
-	$conn->close();
-	exit;
-}
-
-if (isset($_POST['add_doctor'])) {  // Doctor Specialisation
-	$employee_id=$_POST['employee_id'];
-    $designation=$_POST['designation'];
-    $department=$_POST['department'];
-
-	// Now the sql
-	$query=$conn->prepare("INSERT INTO `Doctor` (`department`, `designation`, `employee_id`) VALUES (?, ?, ?)");
-	if (!$query){
-		echo "Insert Unsuccessful.";
-	}
-	else{
-		$query->bind_param("ssd", $department, $designation, $employee_id);
-		$query->execute();
-	}
-	$query->close();
-	$conn->close();
-	exit;
-}
-
-if (isset($_POST['add_ayurvedic'])) {  // Ayurvedic
-	$medicine_id=$_POST['medicine_id'];
-	$type=$_POST['type'];
-
-	// Now the sql
-	$query=$conn->prepare("INSERT INTO `Ayurvedic` (`medicine_id`, `type`) VALUES (?, ?)");
-	if (!$query){
-		echo "Insert Unsuccessful.";
-	}
-	else{
-		$query->bind_param("dd", $medicine_id, $type);
-		$query->execute();
-	}
-	$query->close();
-	$conn->close();
-	exit;
-}
-
-if (isset($_POST['add_sedative'])) {  // Sedative
-	$medicine_id=$_POST['medicine_id'];
-	$type=$_POST['type'];
-
-	// Now the sql
-	$query=$conn->prepare("INSERT INTO `Sedative` (`medicine_id`, `type`) VALUES (?, ?)");
-	if (!$query){
-		echo "Insert Unsuccessful.";
-	}
-	else{
-		$query->bind_param("dd", $medicine_id, $type);
-		$query->execute();
-	}
-	$query->close();
-	$conn->close();
-	exit;
-}
-
-if (isset($_POST['add_homeopathic'])) {  // Homeopathic
-	$medicine_id=$_POST['medicine_id'];
-	$type=$_POST['type'];
-
-	// Now the sql
-	$query=$conn->prepare("INSERT INTO `Homeopathic` (`medicine_id`, `type`) VALUES (?, ?)");
-	if (!$query){
-		echo "Insert Unsuccessful.";
-	}
-	else{
-		$query->bind_param("dd", $medicine_id, $type);
-		$query->execute();
-	}
-	$query->close();
-	$conn->close();
-	exit;
-}
-
-if (isset($_POST['add_miscellaneous'])) {  // Miscellaneous
-	$medicine_id=$_POST['medicine_id'];
-	$type=$_POST['type'];
-
-	// Now the sql
-	$query=$conn->prepare("INSERT INTO `Miscellaneous` (`medicine_id`, `type`) VALUES (?, ?)");
-	if (!$query){
-		echo "Insert Unsuccessful.";
-	}
-	else{
-		$query->bind_param("dd", $medicine_id, $type);
 		$query->execute();
 	}
 	$query->close();
@@ -392,19 +282,359 @@ if (isset($_POST['register_request'])) {
 	exit;	
 }
 
+if (isset($_POST['show_medicine_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT M.id AS id , M.name AS name , M.cost AS cost , S.name AS supplier_name , S.phone AS supplier_phone , S.address AS supplier_address FROM Medicine AS M , Supplier AS S WHERE S.id = M.supplier LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$supplier_name,$supplier_phone,$supplier_address,$name,$cost);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'name' => $name,
+				'cost' => $cost,
+				'supplier_name' => $supplier_name,
+				'supplier_phone' => $supplier_phone,
+				'supplier_address' => $supplier_address
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_supplier_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT `id` , `name` , `phone` , `address` FROM `Supplier` LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$name,$phone,$address);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'name' => $name,
+				'phone' => $phone,
+				'address' => $address
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_inventory_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT I.id AS id , MS.medicine_name AS medicine_name , MS.medicine_cost AS medicine_cost , MS.supplier_name AS supplier_name , MS.supplier_phone AS supplier_phone , MS.supplier_address AS supplier_address FROM `Inventory` AS I , (SELECT M.id AS medicine_id , M.name AS medicine_name , M.cost AS medicine_cost , S.name AS supplier_name , S.phone AS supplier_phone , S.address AS supplier_address FROM `Medicine` AS M , `Supplier` AS S WHERE S.id = M.supplier) AS MS WHERE MS.medicine_id = I.medicine_id LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$medicine_name,$medicine_cost,$supplier_name,$supplier_phone,$supplier_address);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'medicine_name' => $medicine_name,
+				'medicine_cost' => $medicine_cost,
+				'supplier_name' => $supplier_name,
+				'supplier_phone' => $supplier_phone,
+				'supplier_address' => $supplier_address
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_patient_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT `id` , `name` , `phone` , `address` FROM `Patient` LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$name,$phone,$address);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'name' => $name,
+				'phone' => $phone,
+				'address' => $address
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_patient_contact_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT PC.id AS id , PC.name AS name , PC.phone AS phone , P.name AS patient_name , P.phone AS patient_phone , P.address AS patient_address , PC.address AS address FROM `Patient_Contact` AS PC , `Patient` AS P WHERE PC.patient_id = P.id LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$name,$phone,$patient_name,$patient_phone,$patient_address,$address);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'name' => $name,
+				'phone' => $phone,
+				'patient_name' => $patient_name,
+				'patient_phone' => $patient_phone,
+				'patient_address' => $patient_address,
+				'address' => $address				
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_employee_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT `id` , `name` , `salary` , `user_id` FROM `Employee` LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$name,$salary,$user_id);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'name' => $name,
+				'salary' => $salary,
+				'user_id' => $user_id
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_sales_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT S.id AS id , S.cost AS cost , E.name AS employee_name , E.id AS employee_user_id FROM `Sales` AS S , `Employee` AS E WHERE E.id = S.employee_id LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$cost,$employee_name,$employee_user_id);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'cost' => $cost,
+				'employee_name' => $employee_name,
+				'employee_user_id' => $employee_user_id
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_medicine_sold_expanded'])) {  
+	
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result();
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_employee_dependent_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT ED.id AS id , ED.name AS name , ED.relation AS relation , E.name AS employee_name , E.user_id AS employee_user_id FROM `Employee_Dependent` AS ED , `Employee` AS E WHERE E.id = ED.employee_id LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$name,$relation,$employee_name,$employee_user_id);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'name' => $name,
+				'relation' => $relation,
+				'employee_name' => $employee_name,
+				'employee_user_id' => $employee_user_id
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_users_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT `id` , `user_id` , `password_hash` , `password_salt` FROM `Users` LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$user_id,$password_hash,$password_salt);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'user_id' => $user_id,
+				'password_hash' => $password_hash,
+				'password_salt' => $password_salt
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
+
+if (isset($_POST['show_admins_expanded'])) {  
+	if (isset($_POST['offset']))
+		$offset = (int) $_POST['offset'];
+	else 
+		$offset = 0;
+
+	$query=$conn->prepare("SELECT A.id AS id , U.user_id AS user_user_id , U.password_hash AS user_password_hash , U.password_salt AS user_password_salt FROM `Users` AS U , `Admins` AS A WHERE A.user_id = U.id LIMIT 100 OFFSET ?");
+	if (!$query){
+		echo "Failed";
+	}
+	else{
+		$query->bind_param("i", $offset);
+		$query->execute();
+		$query->bind_result($id,$user_user_id,$user_password_hash,$user_password_salt);
+		$return_text = array();
+		while ($query->fetch()) {
+			$return_text_item = array(
+				'id' => $id,
+				'user_user_id' => $user_user_id,
+				'user_password_hash' => $user_password_hash,
+				'user_password_salt' => $user_password_salt
+			);
+			array_push($return_text, $return_text_item);
+		}
+	}
+	$query->close();
+	$conn->close();
+	echo json_encode($return_text);
+	exit;
+}
 
 if (isset($_SESSION['admin'])) {
 	if (isset($_POST['key'])) {
 		// Admin-Level do Something
 	}
 }
-
-if (isset($_GET['key'])) {
-    // do Something Insecure
-    // Live life dangerously
-}
-
-// Admin-Level Get is not Allowed.
 
 echo json_encode($returnText);
 $conn->close();
