@@ -1,0 +1,81 @@
+\documentclass[14pt, a4paper]{extarticle}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+%\usepackage{graphicx}
+%\graphicspath{{/home/Prometheus/assignments/SSAD/OWP}}
+
+\title{\emph{\textbf{Databases Documentation}:}}
+\author{Parth Laxmikant Kolekar, 201301143\\
+Aaditya M Nair, 201302161 }
+
+\begin{document}
+    \maketitle
+
+    \section{About the Project}
+        The project is about a pharmacy system. The system stores data about 
+        medicines, every sale, and also maintains an inventory of medicines 
+        available. The project is divided into 3-tiers:
+        \begin{enumerate}
+                \item The Front-End \\
+                \item Request Handling Scripts \\
+                \item SQL Database \\
+        \end{enumerate}
+
+    \section{SQL Database}
+        Database sever used for the backend is a MySQL Server. A database was created 
+        with the following tables:
+        \begin{enumerate}
+                \item Suppliers \\
+                \item Medicines \\
+                \item Inventory \\
+                \item Patient \\
+                \item Patient Contact \\
+                \item Sales \\
+                \item Medicines Sold \\
+                \item Employees \\
+                \item Employee Contact \\
+                \item etc\ldots \\
+        \end{enumerate}
+
+        In addition to this we also created a "user" database to store usernames and
+        passwords of all users. The users are linked with the Employee Database.
+
+        The passwords are stored using Industry Standard encryption algorithms.
+        The password is hashed using the \emph{SHA256} hashing algorithm (one of 
+        the most secure hashing algorithm) and salted using a randomly generated 
+        string encoded into 64-bits. The hashed and salted password along with 
+        the username and salt are stored in the users database.
+
+    \section{Request Handling Scripts}
+        All of this section of code is written in PHP\@. Functions are used to
+        interact with the MySQL database. All SQL are prepared and sanitised 
+        before their sending and execution. Hence SQL- Injection attacks are 
+        vastly mitigated this way. Different functions are used for INSERT and
+        UPDATE so that User level tasks can easily be seperated from admin level
+        tasks. This allows us for seperation of concerns.
+
+    \section{Front-End}
+        Front-End is developed using simple HTML5, JavaScript and occasionally, 
+        PHP\@. The front-end simply displays the database in tabular format. CRUD
+        operations are possible on that table which directly get updated.
+        There are seperate conrols for general users and admins. Access is granted only
+        to authorised users via the login system. 
+        
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
