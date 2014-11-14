@@ -13,10 +13,10 @@ if (isset($_REQUEST['register'])) {
 		<input name="submit" type="submit" value=" Register " id="button-register">
 		<div class="login error" id="error">
 		</div>
+<a href="./">Login</a>
 	</div>
 </div>
 
-<a href="./">Login</a>
 
 <?php
 } else {
@@ -31,10 +31,10 @@ if (isset($_REQUEST['register'])) {
 		<div class="login error" id="error">
 
 		</div>
+<a href=".?register">Register</a>
 	</div>
 </div>
 
-<a href=".?register">Register</a>
 
 <?php 
 }
